@@ -89,6 +89,10 @@ fn main() {
 
         println!("Successfully generated proof! {:#?}", proof);
 
+        let pvs = proof.public_values.as_slice();
+
+        println!("public_values slice is {:#?}", pvs);
+
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("Successfully verified proof!");
