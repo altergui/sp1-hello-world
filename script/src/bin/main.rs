@@ -13,6 +13,7 @@
 use alloy_sol_types::SolType;
 use clap::Parser;
 use fibonacci_lib::PublicValuesStruct;
+use hex::ToHex;
 use sp1_sdk::{ProverClient, SP1Stdin};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
@@ -88,6 +89,11 @@ fn main() {
             .expect("failed to generate proof");
 
         println!("Successfully generated proof! {:#?}", proof);
+
+        println!(
+            "public_values slice is {}",
+            proof.public_values.encode_hex::<String>()
+        );
 
         let n = proof.public_values.read::<u32>();
         let a = proof.public_values.read::<u32>();
