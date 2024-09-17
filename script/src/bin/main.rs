@@ -83,32 +83,29 @@ fn main() {
         let (pk, vk) = client.setup(FIBONACCI_ELF);
 
         // Generate the proof
-        let mut proof = client
+        let proof = client
             .prove(&pk, stdin)
             .run()
             .expect("failed to generate proof");
 
         println!("Successfully generated proof! {:#?}", proof);
 
-        println!(
-            "public_values slice is {}",
-            proof.public_values.encode_hex::<String>()
-        );
-
-        let n = proof.public_values.read::<u32>();
-        let a = proof.public_values.read::<u32>();
-        let b = proof.public_values.read::<u32>();
-
-        println!("public_values slice is {}, {}, {}", n, a, b);
-
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("Successfully verified proof!");
         println!(
             "I don't know which offset was used:
-            on the proof.public_values i can see n={}, a={}, b={} but not the offset,
-            yet i know the proof is valid",
-            n, a, b
-        )
+            on the proof.public_values i can see n, a, b but not the offset,
+            yet i know the proof is valid"
+        );
+
+        println!(
+            "public_values slice is {}",
+            proof.public_values.encode_hex::<String>()
+        );
+
+        let decoded = PublicValuesStruct::abi_decode(proof.public_values.as_slice(), true).unwrap();
+        let PublicValuesStruct { n, a, b } = decoded;
+        println!("so in public_values i see n={}, a={}, b={}", n, a, b);
     }
 }
