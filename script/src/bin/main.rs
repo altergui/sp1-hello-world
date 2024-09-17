@@ -68,10 +68,11 @@ fn main() {
         println!("n: {}", n);
         println!("a: {}", a);
         println!("b: {}", b);
+        println!("offset: {}", args.offset);
 
         let (expected_a, expected_b) = fibonacci_lib::fibonacci(n);
-        assert_eq!(a, expected_a);
-        assert_eq!(b, expected_b);
+        assert_eq!(a, expected_a + args.offset);
+        assert_eq!(b, expected_b + args.offset);
         println!("Values are correct!");
 
         // Record the number of cycles executed.
@@ -91,5 +92,10 @@ fn main() {
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("Successfully verified proof!");
+        println!(
+            "I don't know which offset was used:
+            on the proof.public_values i can see n, a, b but not the offset,
+            yet i know the proof is valid"
+        )
     }
 }
