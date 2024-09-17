@@ -28,8 +28,11 @@ struct Args {
     #[clap(long)]
     prove: bool,
 
-    #[clap(long, default_value = "20")]
+    #[clap(short, default_value = "20")]
     n: u32,
+
+    #[clap(long, default_value = "0")]
+    offset: u32,
 }
 
 fn main() {
@@ -39,7 +42,7 @@ fn main() {
     // Parse the command line arguments.
     let args = Args::parse();
 
-    if args.execute == args.prove {
+    if !args.execute && !args.prove {
         eprintln!("Error: You must specify either --execute or --prove");
         std::process::exit(1);
     }
@@ -50,6 +53,7 @@ fn main() {
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
     stdin.write(&args.n);
+    stdin.write(&args.offset);
 
     println!("n: {}", args.n);
 
