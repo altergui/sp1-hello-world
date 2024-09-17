@@ -82,24 +82,27 @@ fn main() {
         let (pk, vk) = client.setup(FIBONACCI_ELF);
 
         // Generate the proof
-        let proof = client
+        let mut proof = client
             .prove(&pk, stdin)
             .run()
             .expect("failed to generate proof");
 
         println!("Successfully generated proof! {:#?}", proof);
 
-        let pvs = proof.public_values.as_slice();
+        let n = proof.public_values.read::<u32>();
+        let a = proof.public_values.read::<u32>();
+        let b = proof.public_values.read::<u32>();
 
-        println!("public_values slice is {:#?}", pvs);
+        println!("public_values slice is {}, {}, {}", n, a, b);
 
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("Successfully verified proof!");
         println!(
             "I don't know which offset was used:
-            on the proof.public_values i can see n, a, b but not the offset,
-            yet i know the proof is valid"
+            on the proof.public_values i can see n={}, a={}, b={} but not the offset,
+            yet i know the proof is valid",
+            n, a, b
         )
     }
 }
