@@ -82,7 +82,7 @@ fn main() {
             .run()
             .expect("failed to generate proof");
 
-        println!("Successfully generated proof!");
+        println!("Successfully generated proof! {:#?}", proof);
 
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
