@@ -18,8 +18,13 @@ pub fn main() {
     // from the prover.
     let n = sp1_zkvm::io::read::<u32>();
 
+    let offset = sp1_zkvm::io::read::<u32>();
+
     // Compute the n'th fibonacci number using a function from the workspace lib crate.
     let (a, b) = fibonacci(n);
+
+    // offset for fun
+    let (a, b) = (a + offset, b + offset);
 
     // Encode the public values of the program.
     let bytes = PublicValuesStruct::abi_encode(&PublicValuesStruct { n, a, b });
