@@ -10,6 +10,8 @@
 //! RUST_LOG=info cargo run --release -- --prove
 //! ```
 
+use std::{fs::File, io::Write};
+
 use alloy_sol_types::SolType;
 use clap::Parser;
 use fibonacci_lib::PublicValuesStruct;
@@ -91,6 +93,8 @@ fn main() {
 
         println!("Successfully generated proof! {:#?}", proof);
 
+        save_proof_to_json(&proof).expect("failed to save proof to disk");
+
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("Successfully verified proof!");
@@ -109,4 +113,19 @@ fn main() {
         let PublicValuesStruct { n, a, b } = decoded;
         println!("so in public_values i see n={}, a={}, b={}", n, a, b);
     }
+}
+
+// save `proof` to disk
+fn save_proof_to_json(proof: &sp1_sdk::SP1ProofWithPublicValues) -> std::io::Result<()> {
+    // Open the file in write mode
+    let mut file = File::create("proof.json")?;
+
+    // Serialize the proof to a JSON string
+    let proof_json = serde_json::to_string(&proof).expect("Failed to serialize proof");
+
+    // Write the serialized JSON to the file
+    file.write_all(proof_json.as_bytes())?;
+
+    println!("Proof saved to proof.json");
+    Ok(())
 }
