@@ -105,6 +105,10 @@ fn main() {
 
         println!("loaded proof.json from disk: {:#?}", proof);
 
+        let mut proof = proof;
+        proof.stdin = sp1_sdk::SP1Stdin::default();
+        println!("mutated proof, now is: {:#?}", proof);
+
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("Successfully verified proof!");
