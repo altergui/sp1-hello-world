@@ -29,7 +29,10 @@ struct Args {
     execute: bool,
 
     #[clap(long)]
-    prove: bool,
+    generate: bool,
+
+    #[clap(long)]
+    verify: bool,
 
     #[clap(short, default_value = "20")]
     n: u32,
@@ -45,8 +48,8 @@ fn main() {
     // Parse the command line arguments.
     let args = Args::parse();
 
-    if !args.execute && !args.prove {
-        eprintln!("Error: You must specify either --execute or --prove");
+    if !args.execute && !args.generate && !args.verify {
+        eprintln!("Error: You must specify either --execute, --generate or --verify");
         std::process::exit(1);
     }
 
@@ -80,9 +83,9 @@ fn main() {
 
         // Record the number of cycles executed.
         println!("Number of cycles: {}", report.total_instruction_count());
-    } else {
+    } else if args.generate {
         // Setup the program for proving.
-        let (pk, vk) = client.setup(FIBONACCI_ELF);
+        let (pk, _) = client.setup(FIBONACCI_ELF);
 
         // Generate the proof
         let proof = client
@@ -94,7 +97,11 @@ fn main() {
         println!("Successfully generated proof! {:#?}", proof);
 
         save_proof_to_json(&proof).expect("failed to save proof to disk");
+    } else if args.verify {
+        // Setup the program for proving.
+        let (_, vk) = client.setup(FIBONACCI_ELF);
 
+        let proof = load_proof_from_json();
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("Successfully verified proof!");
@@ -128,4 +135,11 @@ fn save_proof_to_json(proof: &sp1_sdk::SP1ProofWithPublicValues) -> std::io::Res
 
     println!("Proof saved to proof.json");
     Ok(())
+}
+
+fn load_proof_from_json() -> sp1_sdk::SP1ProofWithPublicValues {
+    let file = File::open("proof.json").expect("Failed to open proof file");
+    let proof: sp1_sdk::SP1ProofWithPublicValues =
+        serde_json::from_reader(file).expect("Failed to deserialize proof");
+    proof
 }
