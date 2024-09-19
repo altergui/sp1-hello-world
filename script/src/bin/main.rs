@@ -107,7 +107,6 @@ fn main() {
 
         let mut proof = proof;
         proof.stdin = sp1_sdk::SP1Stdin::default();
-        proof.public_values = sp1_sdk::SP1PublicValues::default();
         println!("mutated proof, now is: {:#?}", proof);
 
         // Verify the proof.
