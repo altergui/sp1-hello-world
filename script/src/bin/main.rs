@@ -102,6 +102,9 @@ fn main() {
         let (_, vk) = client.setup(FIBONACCI_ELF);
 
         let proof = load_proof_from_json();
+
+        println!("loaded proof.json from disk: {:#?}", proof);
+
         // Verify the proof.
         client.verify(&proof, &vk).expect("failed to verify proof");
         println!("Successfully verified proof!");
