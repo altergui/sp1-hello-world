@@ -1848,6 +1848,7 @@ version = "0.1.0"
 dependencies = [
  "alloy-sol-types",
  "fibonacci-lib",
+ "getrandom 0.2.15",
  "monotree",
  "serde",
  "sp1-zkvm",
@@ -1861,6 +1862,7 @@ dependencies = [
  "clap",
  "fibonacci-lib",
  "hex",
+ "monotree",
  "serde",
  "serde_json",
  "sp1-helper",

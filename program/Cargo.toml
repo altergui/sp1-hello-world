@@ -9,3 +9,5 @@ sp1-zkvm = "2.0.0"
 fibonacci-lib = { path = "../lib" }
 serde = "1.0.210"
 monotree = "0.1.5"
+getrandom = "0.2.15"
+#monotree = "0.1.5"

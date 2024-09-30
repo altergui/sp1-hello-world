@@ -12,7 +12,7 @@ use alloy_sol_types::SolType;
 use fibonacci_lib::{fibonacci, PublicValuesStruct};
 use monotree::database::*;
 use monotree::hasher::*;
-use monotree::utils::*;
+// use monotree::utils::*;
 use monotree::*;
 
 pub fn main() {
@@ -48,19 +48,26 @@ pub fn main() {
     // Prepare a random pair of key and leaf.
     // random_hash() gives a fixed length of random array,
     // where Hash -> [u8; HASH_LEN], HASH_LEN = 32
-    let key = random_hash();
-    let leaf = random_hash();
+    // let key = random_hash();
+    // let leaf = random_hash();
+
+    let key: [u8; 32] = [1; 32];
+    let leaf: [u8; 32] = [2; 32];
 
     // Insert the entry (key, leaf) into tree, yielding a new root of tree
-    let root = tree.insert(root.as_ref(), &key, &leaf);
+    let root = tree
+        .insert(root.as_ref(), &key, &leaf)
+        .expect("coulnd't insert");
     assert_ne!(root, None);
 
     // Get the leaf inserted just before. Note that the last root was used.
-    let found = tree.get(root.as_ref(), &key);
+    let found = tree.get(root.as_ref(), &key).unwrap();
     assert_eq!(found, Some(leaf));
 
+    let root = root.unwrap();
+
     // Encode the public values of the program.
-    let bytes = PublicValuesStruct::abi_encode(&PublicValuesStruct { n, a, b });
+    let bytes = PublicValuesStruct::abi_encode(&PublicValuesStruct { n, a, b, root });
 
     // Commit to the public values of the program. The final proof will have a commitment to all the
     // bytes that were committed to.

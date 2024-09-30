@@ -6,6 +6,7 @@ sol! {
         uint32 n;
         uint32 a;
         uint32 b;
+        uint8[32] root;
     }
 }
 

@@ -70,10 +70,11 @@ fn main() {
 
         // Read the output.
         let decoded = PublicValuesStruct::abi_decode(output.as_slice(), true).unwrap();
-        let PublicValuesStruct { n, a, b } = decoded;
+        let PublicValuesStruct { n, a, b, root } = decoded;
         println!("n: {}", n);
         println!("a: {}", a);
         println!("b: {}", b);
+        println!("root: {:?}", root);
         println!("offset: {}", args.offset);
 
         let (expected_a, expected_b) = fibonacci_lib::fibonacci(n);
