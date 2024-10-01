@@ -8,3 +8,6 @@ resolver = "2"
 
 [workspace.dependencies]
 alloy-sol-types = "0.7.7"
+
+#[patch.crates-io]
+#blake3 = { git = "https://github.com/BLAKE3-team/BLAKE3" , version = "1.5.4"}
