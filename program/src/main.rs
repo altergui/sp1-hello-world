@@ -43,7 +43,7 @@ pub fn main() {
     let mut tree = Monotree::<MemoryDB, Blake3>::new("/tmp/monotree");
 
     // It is natural the tree root initially has 'None'
-    let root = None;
+    let mut root = None;
 
     // Prepare a random pair of key and leaf.
     // random_hash() gives a fixed length of random array,
@@ -51,20 +51,24 @@ pub fn main() {
     // let key = random_hash();
     // let leaf = random_hash();
 
+    // let bu8 = b.try_into().unwrap();
     let key: [u8; 32] = [1; 32];
-    let leaf: [u8; 32] = [2; 32];
+    let leaf: [u8; 32] = [b as u8; 32];
 
-    // Insert the entry (key, leaf) into tree, yielding a new root of tree
-    let root = tree
-        .insert(root.as_ref(), &key, &leaf)
-        .expect("coulnd't insert");
-    assert_ne!(root, None);
+    for _i in 0..offset {
+        // Insert the entry (key, leaf) into tree, yielding a new root of tree
+        root = tree
+            .insert(root.as_ref(), &key, &leaf)
+            .expect("coulnd't insert");
+        assert_ne!(root, None);
+    }
 
     // Get the leaf inserted just before. Note that the last root was used.
     let found = tree.get(root.as_ref(), &key).unwrap();
     assert_eq!(found, Some(leaf));
 
     let root = root.unwrap();
+    println!("root: {}", hex::encode(root));
 
     // Encode the public values of the program.
     let bytes = PublicValuesStruct::abi_encode(&PublicValuesStruct { n, a, b, root });
