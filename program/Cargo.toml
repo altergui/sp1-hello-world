@@ -10,3 +10,4 @@ fibonacci-lib = { path = "../lib" }
 serde = "1.0.210"
 #monotree = "0.1.5"
 monotree = { git = "https://github.com/altergui/monotree", version = "0.1.5", default-features = false }
+hex = "0.4.3"

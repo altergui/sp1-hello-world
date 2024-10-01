@@ -17,6 +17,7 @@ use clap::Parser;
 use fibonacci_lib::PublicValuesStruct;
 use hex::ToHex;
 use sp1_sdk::{ProverClient, SP1Stdin};
+use std::time::Instant;
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
 pub const FIBONACCI_ELF: &[u8] = include_bytes!("../../../elf/riscv32im-succinct-zkvm-elf");
@@ -65,8 +66,10 @@ fn main() {
 
     if args.execute {
         // Execute the program
+        let start_time = Instant::now();
         let (output, report) = client.execute(FIBONACCI_ELF, stdin).run().unwrap();
         println!("Program executed successfully.");
+        println!("Time elapsed: {:?}", start_time.elapsed());
 
         // Read the output.
         let decoded = PublicValuesStruct::abi_decode(output.as_slice(), true).unwrap();
@@ -125,8 +128,11 @@ fn main() {
         );
 
         let decoded = PublicValuesStruct::abi_decode(proof.public_values.as_slice(), true).unwrap();
-        let PublicValuesStruct { n, a, b } = decoded;
-        println!("so in public_values i see n={}, a={}, b={}", n, a, b);
+        let PublicValuesStruct { n, a, b, root } = decoded;
+        println!(
+            "so in public_values i see n={}, a={}, b={}, root={:?}",
+            n, a, b, root
+        );
     }
 }
 
